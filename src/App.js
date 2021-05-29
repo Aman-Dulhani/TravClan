@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import CustomerBidContainer from './components/customerBidContainer';
 import './App.css';
+import { createMuiTheme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  fontFamily: 'Roboto, sans-serif',
+    // palette: {
+    //     primary1Color: blue[600],
+    //     primary2Color: blue[700],
+    //     primary3Color: grey[400],
+    //     accent1Color: red[600],
+    //     accent2Color: grey[100],
+    //     accent3Color: grey[500],
+    //     textColor: common.darkBlack,
+    //     alternateTextColor: common.white,
+    //     borderColor: grey[300],
+    //     pickerHeaderColor: blue[600],
+    //     shadowColor: common.fullBlack,
+    // },
+});
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ThemeProvider theme={theme}>
+        <CustomerBidContainer />
+      </ThemeProvider>
     </div>
   );
 }
