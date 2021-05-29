@@ -18,4 +18,8 @@ export const maxMinValue = (action, array) => {
     }
 }
 
+export const api = {
+    merchantApi: 'https://intense-tor-76305.herokuapp.com/merchants',
+}
+
 export const isArrayValidAndNotEmpty = anArray => anArray && Array.isArray(anArray) && anArray.length > 0;

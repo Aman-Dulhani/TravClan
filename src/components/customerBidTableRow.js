@@ -1,9 +1,8 @@
 import React from 'react';
 import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
 import CancelRounded from '@material-ui/icons/Cancel';
-import { TableRow, TableCell, Avatar, Button, TableRowColumn } from '@material-ui/core';
+import { TableRow, TableCell, Avatar, Button } from '@material-ui/core';
 import { maxMinValue } from '../Utils';
-import { ThreeSixty } from '@material-ui/icons';
 
 class CustomerBidTableRow extends React.Component {
     constructor (props) {

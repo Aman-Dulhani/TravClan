@@ -2,6 +2,8 @@ import CustomerBidContainer from './components/customerBidContainer';
 import './App.css';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import CustomerDetails from './components/customerDetails';
 
 const theme = createMuiTheme({
   fontFamily: 'Roboto, sans-serif',
@@ -24,7 +26,12 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <CustomerBidContainer />
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={CustomerBidContainer} />
+            <Route exact path="/CustomerDetails/:id" component={CustomerDetails} />
+          </Switch>
+        </BrowserRouter>
       </ThemeProvider>
     </div>
   );

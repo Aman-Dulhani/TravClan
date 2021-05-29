@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import {
-    Table, TableBody, TableHead, TableCell, TableRow, Avatar,
+    Table, TableBody, TableHead, TableCell, TableRow,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
-import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
-import CancelRounded from '@material-ui/icons/Cancel';
-import Switch from '@material-ui/core/Switch';
-import { KeyboardArrowDown, KeyboardArrowUpRounded } from '@material-ui/icons';
-import { maxMinValue, isArrayValidAndNotEmpty } from '../Utils';
+import TablePagination from '@material-ui/core/TablePagination';
+import { isArrayValidAndNotEmpty } from '../Utils';
+import CustomerBidTableRow from './customerBidTableRow';
+import { useHistory } from 'react-router-dom';
 
 const styles = (theme) => ({
     root: {
         overflow: 'auto',
-        fontSize: '12px',
-        border: '1px solid',
+        fontSize: '14px',
         padding: '20px',
         borderRadius: 8
     },
@@ -28,6 +26,11 @@ const styles = (theme) => ({
         cursor: 'pointer',
         backgroundColor: '#F5F5F5',
     },
+    actionRow: {
+        cursor: 'pointer',
+        backgroundColor: '#F5F5F5',
+        zIndex: '22',
+    },
     label: {
         fontSize: '8px'
     }
@@ -36,61 +39,62 @@ const styles = (theme) => ({
 const CustomerBidTable = (props) => {
 
     const {
-        classes, list, page, size, totalElements
+        classes, list, page, size, totalElements, handleRowsPerPage, handlePage, sortData,
     } = props;
 
-    const array = new Array(totalElements).fill(true);
+    const history = useHistory();
+    const[sortDirection, setSortDirection] = useState("asc");
 
-    const RenderTableRow = (data, classes) => {
-        const[isMax, setIsMax] = useState(true);
-        const bid = isMax ? maxMinValue('max', data.bids).amount : maxMinValue('min', data.bids).amount;
-
-        const handleOnChange = (e) => {
-            setIsMax(e.target.checked);
-        } 
-        return (
-            <TableRow key={data.id} className={classes.row}>
-                <TableCell className={classes.row}><Avatar src={data.avatarUrl} /></TableCell>
-                <TableCell className={classes.row}>{`${data.firstname} ${data.lastname}`}</TableCell>
-                <TableCell className={classes.row}>{data.email}</TableCell>
-                <TableCell className={classes.row}>{data.phone}</TableCell>
-                <TableCell className={classes.row}>{data.hasPremium ? <CheckCircleRoundedIcon color="action" fontSize="small" /> : <CancelRounded color="error" fontSize="small" />}</TableCell>
-                <TableCell className={classes.row}>{bid}</TableCell>
-                <TableCell className={classes.row}>
-                    <Switch
-                        checked={isMax}
-                        onChange={handleOnChange}
-                        name="Max/Min"
-                        color="default"
-                        icon={<CancelRounded/>}
-                        checkedIcon={<CheckCircleRoundedIcon/>}
-                        key={data.id}
-                    />
-                </TableCell>
-            </TableRow>
-        )
+    const sortDirectionChange = () => {
+        if (sortDirection === "asc") {
+            sortData("asc")
+            setSortDirection("desc");
+        } else {
+            sortData("desc");
+            setSortDirection("asc");
+        }
     }
 
     return (
-        <Table className={classes.root}>
-            <TableHead>
-                <TableRow>
-                    <TableCell className={classes.head} />
-                    <TableCell className={classes.head}>Customer Name</TableCell>
-                    <TableCell className={classes.head}>Email</TableCell>
-                    <TableCell className={classes.head}>Phone No.</TableCell>
-                    <TableCell className={classes.head}>Premium</TableCell>
-                    <TableCell className={classes.head}>Bid</TableCell>
-                    <TableCell className={classes.head} />
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {
-                    isArrayValidAndNotEmpty(list) &&
-                    list.map((data, index) => RenderTableRow(data, classes, index))
-                }
-            </TableBody>
-        </Table>
+        <div>
+            <Table className={classes.root}>
+                <TableHead>
+                    <TableRow>
+                        <TableCell className={classes.head} />
+                        <TableCell className={classes.head}>Customer Name</TableCell>
+                        <TableCell className={classes.head}>Email</TableCell>
+                        <TableCell className={classes.head}>Phone No.</TableCell>
+                        <TableCell className={classes.head}>Premium</TableCell>
+                        <TableCell className={classes.head} onClick={sortDirectionChange}>Bid</TableCell>
+                        <TableCell className={classes.head} />
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {
+                        isArrayValidAndNotEmpty(list) &&
+                        list.map((data, index) => <CustomerBidTableRow data={data} classes={classes} history={history}/>)
+                    }
+                </TableBody>
+            </Table>
+            <TablePagination
+                component="div"
+                // ActionsComponent={TablePaginationActions}
+                count={totalElements}
+                rowsPerPage={size}
+                page={page}
+                rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                backIconButtonProps={{
+                    'aria-label': 'Previous Page',
+                    'aria-hidden': false,
+                }}
+                nextIconButtonProps={{
+                    'aria-label': 'Next Page',
+                    'aria-hidden': false,
+                }}
+                onChangePage={handlePage}
+                onChangeRowsPerPage={handleRowsPerPage}
+            />
+        </div>
     )
 
 }
